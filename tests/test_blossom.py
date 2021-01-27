@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import pytest
 from conftest import snode
 
@@ -11,11 +12,13 @@ def test_ancestors_leaf(binary_tree_path):
 
 
 def test_ancestors_root(binary_tree_path):
-    assert binary_tree_path.nodes[0].ancestor_path() == [binary_tree_path.nodes[0]]
+    assert binary_tree_path.nodes[0].ancestor_path() == [
+        binary_tree_path.nodes[0]
+    ]
 
 
 def test_contract_blossom(stem_and_blossom_match):
-    nodelist = stem_and_blossom_match.nodes.values()
+    nodelist = list(stem_and_blossom_match.nodes.values())
     snode.cycle = nodelist[3:7]
     new_nodelist = snode.contract_nodelist(nodelist)
 
@@ -33,7 +36,7 @@ def test_contract_blossom(stem_and_blossom_match):
 
 
 def test_expand_blossom(stem_and_blossom_match):
-    orig_nodelist = stem_and_blossom_match.nodes.values()
+    orig_nodelist = list(stem_and_blossom_match.nodes.values())
 
     # First contract nodelist
     snode.cycle = orig_nodelist[3:7]
@@ -41,7 +44,9 @@ def test_expand_blossom(stem_and_blossom_match):
 
     # Now expand nodelist
     expand_nodelist = snode.expand_nodelist(contract_nodelist)
-    stem_and_blossom_match.nodes = {node.name: node for node in expand_nodelist}
+    stem_and_blossom_match.nodes = {
+        node.name: node for node in expand_nodelist
+    }
     stem_and_blossom_match.compute_edges()
 
     errors = []
@@ -80,7 +85,7 @@ def test_expand_blossom(stem_and_blossom_match):
     ],
 )
 def test_cycle_path(i, j, node_nums, cycle_match):
-    nodes = cycle_match.nodes.values()
+    nodes = list(cycle_match.nodes.values())
     path = nodes[i].cycle_aug_path(nodes[j], nodes)
 
     nodepath = []
@@ -91,10 +96,10 @@ def test_cycle_path(i, j, node_nums, cycle_match):
 
 
 def test_expand_path_forward(bud_match):
-    cycle = bud_match.nodes.values()[1:6]
+    cycle = list(bud_match.nodes.values())[1:6]
     snode.cycle = cycle
 
-    nodelist = snode.contract_nodelist(bud_match.nodes.values())
+    nodelist = snode.contract_nodelist(list(bud_match.nodes.values()))
     bud_match.nodes = {node.name: node for node in nodelist}
 
     path = [bud_match.nodes[0], snode, bud_match.nodes[6], bud_match.nodes[7]]
@@ -114,13 +119,18 @@ def test_expand_path_forward(bud_match):
 
 
 def test_expand_path_reverse(bud_match):
-    cycle = bud_match.nodes.values()[1:6]
+    cycle = list(bud_match.nodes.values())[1:6]
     snode.cycle = cycle
 
-    nodelist = snode.contract_nodelist(bud_match.nodes.values())
+    nodelist = snode.contract_nodelist(list(bud_match.nodes.values()))
     bud_match.nodes = {node.name: node for node in nodelist}
 
-    reverse_path = [bud_match.nodes[7], bud_match.nodes[6], snode, bud_match.nodes[0]]
+    reverse_path = [
+        bud_match.nodes[7],
+        bud_match.nodes[6],
+        snode,
+        bud_match.nodes[0],
+    ]
     aug_path = snode.expand_path(reverse_path, cycle)
 
     nodelist = snode.expand_nodelist(nodelist)
@@ -137,10 +147,10 @@ def test_expand_path_reverse(bud_match):
 
 
 def test_expand_path_head(blossom_tail_match):
-    cycle = blossom_tail_match.nodes.values()[3:8]
+    cycle = list(blossom_tail_match.nodes.values())[3:8]
     snode.cycle = cycle
 
-    nodelist = snode.contract_nodelist(blossom_tail_match.nodes.values())
+    nodelist = snode.contract_nodelist(list(blossom_tail_match.nodes.values()))
     blossom_tail_match.nodes = {node.name: node for node in nodelist}
 
     reverse_path = [
@@ -167,10 +177,10 @@ def test_expand_path_head(blossom_tail_match):
 
 
 def test_expand_path_tail(blossom_tail_match):
-    cycle = blossom_tail_match.nodes.values()[3:8]
+    cycle = list(blossom_tail_match.nodes.values())[3:8]
     snode.cycle = cycle
 
-    nodelist = snode.contract_nodelist(blossom_tail_match.nodes.values())
+    nodelist = snode.contract_nodelist(list(blossom_tail_match.nodes.values()))
     blossom_tail_match.nodes = {node.name: node for node in nodelist}
 
     path = [
@@ -197,7 +207,7 @@ def test_expand_path_tail(blossom_tail_match):
 
 
 def test_matching_stem_and_blossom(stem_and_blossom_match):
-    for node in stem_and_blossom_match.nodes.values():
+    for node in list(stem_and_blossom_match.nodes.values()):
         node.match = None
     stem_and_blossom_match.compute_edges()
     stem_and_blossom_match.find_max_matching()
@@ -206,7 +216,7 @@ def test_matching_stem_and_blossom(stem_and_blossom_match):
 
 
 def test_matching_bud(bud_match):
-    for node in bud_match.nodes.values():
+    for node in list(bud_match.nodes.values()):
         node.match = None
     bud_match.compute_edges()
     bud_match.find_max_matching()
@@ -215,7 +225,7 @@ def test_matching_bud(bud_match):
 
 
 def test_matching_blossom_tail(blossom_tail_match):
-    for node in blossom_tail_match.nodes.values():
+    for node in list(blossom_tail_match.nodes.values()):
         node.match = None
     blossom_tail_match.compute_edges()
     blossom_tail_match.find_max_matching()
@@ -224,7 +234,7 @@ def test_matching_blossom_tail(blossom_tail_match):
 
 
 def test_matching_binary_tree(binary_tree_path):
-    for node in binary_tree_path.nodes.values():
+    for node in list(binary_tree_path.nodes.values()):
         node.match = None
     binary_tree_path.compute_edges()
     binary_tree_path.clean_graph()

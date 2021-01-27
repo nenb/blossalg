@@ -1,0 +1,6 @@
+include LICENSE *.md *.toml *.yaml *.ini
+graft .github
+
+# Tests
+include tox.ini
+recursive-include tests *.py

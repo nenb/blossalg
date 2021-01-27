@@ -1,11 +1,17 @@
 """Classes for constructing graph, methods for computing maximum matching"""
+from __future__ import division
+from __future__ import unicode_literals
+from past.utils import old_div
+from builtins import object
 import logging
 
 # Logger setup - output errors only to blossom_errorfile
 logger = logging.getLogger(__name__)
 f_handler = logging.FileHandler("blossom_errorfile.log")
 f_handler.setLevel(logging.ERROR)
-f_format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+f_format = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 f_handler.setFormatter(f_format)
 logger.addHandler(f_handler)
 
@@ -37,7 +43,9 @@ class Node(object):
         idx2 = cycle.index(match_node)
         path = []
 
-        if (idx1 > 0 and idx2 == idx1 - 1) or (idx1 == 0 and idx2 == len(cycle) - 1):
+        if (idx1 > 0 and idx2 == idx1 - 1) or (
+            idx1 == 0 and idx2 == len(cycle) - 1
+        ):
             reverse_cycle = cycle[idx1::-1] + cycle[:idx1:-1]
             for node in reverse_cycle:
                 path.append(node)
@@ -79,7 +87,9 @@ class Supernode(Node):
             if node.match in self.cycle:
                 node.match = self
             node.neighbors = [
-                neighbor for neighbor in node.neighbors if neighbor not in self.cycle
+                neighbor
+                for neighbor in node.neighbors
+                if neighbor not in self.cycle
             ]
             if node in self.neighbors:
                 node.neighbors.append(self)
@@ -107,7 +117,8 @@ class Supernode(Node):
         return nodelist
 
     def expand_path(self, path, cycle):
-        """Replace supernode in augmenting path with corresponding cycle nodes"""
+        """Replace supernode in augmenting path with corresponding cycle
+        nodes"""
         if self not in path:
             return path
 
@@ -138,20 +149,26 @@ class Supernode(Node):
                     if path[idx + 1] in node.neighbors:
                         cpath = node.cycle_aug_path(node.match, cycle)
                         return path[:idx] + cpath[::-1] + path[idx + 1 :]
-                logger.error("Supernode (inner 1) not connected to rest of graph.")
+                logger.error(
+                    "Supernode (inner 1) not connected to rest of graph."
+                )
 
             elif path.index(self.match) == idx + 1:
                 for node in cycle:
                     if path[idx - 1] in node.neighbors:
                         cpath = node.cycle_aug_path(node.match, cycle)
                         return path[:idx] + cpath + path[idx + 1 :]
-                logger.error("Supernode (inner 2) not connected to rest of graph.")
+                logger.error(
+                    "Supernode (inner 2) not connected to rest of graph."
+                )
 
             else:
-                logger.error("Supernode not matched correctly to rest of graph.")
+                logger.error(
+                    "Supernode not matched correctly to rest of graph."
+                )
 
 
-class Graph:
+class Graph(object):
     def __init__(self):
         self.nodes = None
         self.edges = None
@@ -178,7 +195,7 @@ class Graph:
             if self.nodes[key].match:
                 size += 1
         assert size % 2 == 0
-        return size / 2
+        return old_div(size, 2)
 
     def create_matching_dict(self):
         """Create dictionary of matched pairs"""
@@ -202,7 +219,9 @@ class Graph:
         self.clean_graph()
         self.compute_edges()
 
-        exposed_node = [node for node in self.nodes.values() if node.match is None]
+        exposed_node = [
+            node for node in list(self.nodes.values()) if node.match is None
+        ]
         for node in exposed_node:
             node.parent = node
             node.root = node
@@ -245,14 +264,14 @@ class Graph:
 
         # Contract cycle nodes to supernode
         snode = Supernode(cycle)
-        nodelist = snode.contract_nodelist(self.nodes.values())
+        nodelist = snode.contract_nodelist(list(self.nodes.values()))
         self.nodes = {node.name: node for node in nodelist}
         self.compute_edges()
         aug_path = self.find_aug_path()
 
         # Expand supernode back to original cycle nodes
         aug_path = snode.expand_path(aug_path, cycle)
-        nodelist = snode.expand_nodelist(self.nodes.values())
+        nodelist = snode.expand_nodelist(list(self.nodes.values()))
         self.nodes = {node.name: node for node in nodelist}
         self.compute_edges()
 
