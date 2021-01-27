@@ -50,8 +50,11 @@ Version:
 
 - blossalg v1.0.0
 """
+from __future__ import print_function
+from __future__ import unicode_literals
 
 # Standard library imports
+from builtins import range
 import re
 import sys
 import csv
@@ -78,14 +81,16 @@ def parse(arg_line):
     args = {}
     match_object = args_pattern.match(arg_line)
     if match_object:
-        args = {k: v for k, v in match_object.groupdict().items() if v is not None}
+        args = {
+            k: v for k, v in list(match_object.groupdict().items()) if v is not None
+        }
     return args
 
 
 def read_infile(infile):
     node_array = []
     with open(infile) as csvfile:
-        for row in csv.reader(csvfile, delimiter=","):
+        for row in csv.reader(csvfile, delimiter=str(",")):
             neighbours = [idx for idx, row in enumerate(row) if row == "1"]
             node_array.append(neighbours)
     if len(node_array) == 0:
@@ -112,7 +117,7 @@ def compute_max_matching(node_array):
 
 def save_matched_pairs(matched_dict, outfile):
     with open(outfile, "w") as textfile:
-        for pair in matched_dict.items():
+        for pair in list(matched_dict.items()):
             string = "{}:{}\n".format(pair[0], pair[1])
             textfile.write(string)
 
