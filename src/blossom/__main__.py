@@ -82,7 +82,9 @@ def parse(arg_line):
     match_object = args_pattern.match(arg_line)
     if match_object:
         args = {
-            k: v for k, v in list(match_object.groupdict().items()) if v is not None
+            k: v
+            for k, v in list(match_object.groupdict().items())
+            if v is not None
         }
     return args
 
@@ -134,8 +136,10 @@ def main():
     matched_graph = compute_max_matching(node_array)
 
     # Multiple by two to convert number of matched pairs to matched nodes.
-    outstring = """There are {} matched nodes in maximum matched graph.""".format(
-        int(2 * matched_graph.compute_size_matching())
+    outstring = (
+        """There are {} matched nodes in maximum matched graph.""".format(
+            int(2 * matched_graph.compute_size_matching())
+        )
     )
     print(outstring)
 
