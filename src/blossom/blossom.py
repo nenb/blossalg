@@ -173,9 +173,10 @@ class Supernode(Node):
 class Graph(object):
     def __init__(self):
         self.nodes = None
-        self.edges = defaultdict(int)
+        self.edges = None
 
     def compute_edges(self):
+        self.edges = defaultdict(int)
         return
 
     def mark_edges(self, node1, node2):
