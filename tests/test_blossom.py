@@ -26,8 +26,9 @@ def test_contract_blossom(stem_and_blossom_match):
     stem_and_blossom_match.compute_edges()
 
     errors = []
-    if stem_and_blossom_match.edges != {(0, 1): 1, (1, 2): 1, (2, 8): 1}:
-        errors.append("edge error")
+    # Deprecated
+    # if stem_and_blossom_match.deges != {(0, 1): 1, (1, 2): 1, (2, 8): 1}:
+    #     errors.append("edge error")
     if stem_and_blossom_match.nodes[2].match.name != 8:
         errors.append("stem match error")
     if stem_and_blossom_match.nodes[8].match.name != 2:
@@ -50,16 +51,17 @@ def test_expand_blossom(stem_and_blossom_match):
     stem_and_blossom_match.compute_edges()
 
     errors = []
-    if stem_and_blossom_match.edges != {
-        (0, 1): 1,
-        (1, 2): 1,
-        (2, 3): 1,
-        (3, 4): 1,
-        (3, 6): 1,
-        (4, 5): 1,
-        (5, 6): 1,
-    }:
-        errors.append("edge error")
+    # Deprecated
+    # if stem_and_blossom_match.edges != {
+    #     (0, 1): 1,
+    #     (1, 2): 1,
+    #     (2, 3): 1,
+    #     (3, 4): 1,
+    #     (3, 6): 1,
+    #     (4, 5): 1,
+    #     (5, 6): 1,
+    # }:
+    #     errors.append("edge error")
     if stem_and_blossom_match.nodes[0].match.name != 1:
         errors.append("stem match error")
     if stem_and_blossom_match.nodes[1].match.name != 0:
