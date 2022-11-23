@@ -5,6 +5,8 @@ from past.utils import old_div
 from builtins import object
 import logging
 
+from collections import defaultdict
+
 # Logger setup - output errors only to blossom_errorfile
 logger = logging.getLogger(__name__)
 f_handler = logging.FileHandler("blossom_errorfile.log")
@@ -171,16 +173,13 @@ class Supernode(Node):
 class Graph(object):
     def __init__(self):
         self.nodes = None
-        self.edges = None
+        self.edges = defaultdict(int)
 
     def compute_edges(self):
-        self.edges = {}
-        for key in self.nodes:
-            for node in self.nodes[key].neighbors:
-                self.edges[tuple(sorted([key, node.name]))] = 1
+        return
 
     def mark_edges(self, node1, node2):
-        self.edges[tuple(sorted([node1.name, node2.name]))] = 0
+        self.edges[tuple(sorted([node1.name, node2.name]))] = 1
 
     def clean_graph(self):
         for key in self.nodes:
@@ -229,7 +228,7 @@ class Graph(object):
         for node in exposed_node:
             if not node.mark:
                 for adj_node in node.neighbors:
-                    if self.edges[tuple(sorted([node.name, adj_node.name]))]:
+                    if not self.edges[tuple(sorted([node.name, adj_node.name]))]:
                         if adj_node not in exposed_node:
                             adj_node.parent = node
                             adj_node.root = node.root
