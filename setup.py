@@ -9,7 +9,7 @@ with open(os.path.join(HERE, "README.md")) as fid:
 if __name__ == "__main__":
     setup(
         name="blossalg",
-        version="1.1.0",
+        version="1.2.0",
         description=(
             "Construct a maximum matching on a graph with the blossom"
             " algorithm"
