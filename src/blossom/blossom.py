@@ -229,7 +229,9 @@ class Graph(object):
         for node in exposed_node:
             if not node.mark:
                 for adj_node in node.neighbors:
-                    if not self.edges[tuple(sorted([node.name, adj_node.name]))]:
+                    if not self.edges[
+                        tuple(sorted([node.name, adj_node.name]))
+                    ]:
                         if adj_node not in exposed_node:
                             adj_node.parent = node
                             adj_node.root = node.root
